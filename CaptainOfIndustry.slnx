@@ -1,5 +1,11 @@
 <Solution>
   <Folder Name="/src/">
-    <Project Path="src/ErpForFactoryGames.CaptainOfIndustry.Extractor/ErpForFactoryGames.CaptainOfIndustry.Extractor.csproj" />
+    <Project Path="src/ErpForFactoryGames.CaptainOfIndustry.Catalogue/ErpForFactoryGames.CaptainOfIndustry.Catalogue.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/ErpForFactoryGames.CaptainOfIndustry.Catalogue.Tests/ErpForFactoryGames.CaptainOfIndustry.Catalogue.Tests.csproj" />
+  </Folder>
+  <Folder Name="/tools/">
+    <Project Path="tools/CatalogueDump/CatalogueDump.csproj" />
   </Folder>
 </Solution>
