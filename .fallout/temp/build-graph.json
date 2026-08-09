@@ -1,0 +1,82 @@
+{
+  "version": 1,
+  "falloutVersion": "10.4.0.15",
+  "targets": [
+    {
+      "name": "Clean",
+      "description": null,
+      "declaredIn": "Build",
+      "default": false,
+      "listed": true,
+      "dependsOn": [],
+      "after": [],
+      "triggeredBy": [],
+      "triggers": []
+    },
+    {
+      "name": "Compile",
+      "description": null,
+      "declaredIn": "Build",
+      "default": true,
+      "listed": true,
+      "dependsOn": [
+        "Restore"
+      ],
+      "after": [],
+      "triggeredBy": [],
+      "triggers": []
+    },
+    {
+      "name": "Pack",
+      "description": null,
+      "declaredIn": "Build",
+      "default": false,
+      "listed": true,
+      "dependsOn": [
+        "Compile"
+      ],
+      "after": [],
+      "triggeredBy": [],
+      "triggers": []
+    },
+    {
+      "name": "Push",
+      "description": null,
+      "declaredIn": "Build",
+      "default": false,
+      "listed": true,
+      "dependsOn": [
+        "Pack"
+      ],
+      "after": [],
+      "triggeredBy": [],
+      "triggers": []
+    },
+    {
+      "name": "Restore",
+      "description": null,
+      "declaredIn": "Build",
+      "default": false,
+      "listed": true,
+      "dependsOn": [
+        "Clean"
+      ],
+      "after": [],
+      "triggeredBy": [],
+      "triggers": []
+    },
+    {
+      "name": "Test",
+      "description": null,
+      "declaredIn": "Build",
+      "default": false,
+      "listed": true,
+      "dependsOn": [
+        "Compile"
+      ],
+      "after": [],
+      "triggeredBy": [],
+      "triggers": []
+    }
+  ]
+}

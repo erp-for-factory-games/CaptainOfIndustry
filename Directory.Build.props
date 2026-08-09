@@ -39,4 +39,20 @@
     <None Include="$(MSBuildThisFileDirectory)README.md" Pack="true" PackagePath="/" />
   </ItemGroup>
 
+  <!--
+    Nerdbank.GitVersioning drives $(Version) from version.json plus git height,
+    so a tagged release produces a distinct package version. Without it every
+    pack emits 1.0.0 and the second publish is silently skipped as a duplicate.
+    Excluded from test projects, which are never published.
+
+    PrivateAssets=all keeps NB.GV out of the dependency graph of anything that
+    consumes our packages.
+  -->
+  <ItemGroup Condition="!$(MSBuildProjectName.EndsWith('.Tests'))">
+    <PackageReference Include="Nerdbank.GitVersioning" Version="3.7.115">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
 </Project>

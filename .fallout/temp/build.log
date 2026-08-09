@@ -1,0 +1,66 @@
+20:01:32.584 | V |                      | ArgumentsFromParametersFile.OnBuildCreated (150)
+20:01:32.637 | V |                      | HandleReSharperSurrogateArguments.OnBuildCreated (150)
+20:01:32.638 | V |                      | InjectParameterValues.OnBuildCreated (100)
+20:01:32.703 | V |                      | HandleShellCompletion.OnBuildCreated (75)
+20:01:32.971 | V |                      | GenerateBuildServerConfigurations.OnBuildCreated (50)
+20:01:32.974 | V |                      | InvokeBuildServerConfigurationGeneration.OnBuildCreated (45)
+20:01:33.007 | V |                      | UpdateNotification.OnBuildCreated (10)
+20:01:33.008 | V |                      | UnsetVisualStudioEnvironmentVariables.OnBuildCreated (0)
+20:01:33.009 | V |                      | HandleVisualStudioDebugging.OnBuildCreated (0)
+20:01:33.016 | V |                      | EventInvoker.OnBuildCreated (-3.4028235E+38)
+20:01:33.054 | V |                      | SerializeBuildGraph.OnBuildInitialized (20)
+20:01:33.115 | V |                      | HandlePlanRequests.OnBuildInitialized (10)
+20:01:33.115 | V |                      | HandleHelpRequests.OnBuildInitialized (5)
+20:01:33.116 | V |                      | InjectNonParameterValues.OnBuildInitialized (-100)
+20:01:33.200 | V |                      | EventInvoker.OnBuildInitialized (-3.4028235E+38)
+20:01:33.234 | V | Clean                | EventInvoker.OnTargetRunning (-3.4028235E+38)
+20:01:33.251 | V | Clean                | EventInvoker.OnTargetSucceeded (-3.4028235E+38)
+20:01:33.256 | V | Restore              | EventInvoker.OnTargetRunning (-3.4028235E+38)
+20:01:33.677 | I | Restore              | > "C:\Program Files\dotnet\dotnet.exe" restore D:\Github\Erp-For-Factory-Games\CaptainOfIndustry\CaptainOfIndustry.slnx
+20:01:33.693 | V | Restore              | @ D:\Github\Erp-For-Factory-Games\CaptainOfIndustry
+20:01:35.803 | D | Restore              |   Determining projects to restore...
+20:01:36.823 | D | Restore              |   All projects are up-to-date for restore.
+20:01:37.062 | V | Restore              | EventInvoker.OnTargetSucceeded (-3.4028235E+38)
+20:01:37.071 | V | Compile              | EventInvoker.OnTargetRunning (-3.4028235E+38)
+20:01:37.698 | I | Compile              | > "C:\Program Files\dotnet\dotnet.exe" build D:\Github\Erp-For-Factory-Games\CaptainOfIndustry\CaptainOfIndustry.slnx --configuration Release --no-restore
+20:01:37.699 | V | Compile              | @ D:\Github\Erp-For-Factory-Games\CaptainOfIndustry
+20:01:41.211 | D | Compile              | C:\Program Files\dotnet\sdk\11.0.100-preview.6.26359.118\Sdks\Microsoft.NET.Sdk\targets\Microsoft.NET.RuntimeIdentifierInference.targets(385,5): message NETSDK1057: You are using a preview version of .NET. See: https://aka.ms/dotnet-support-policy [D:\Github\Erp-For-Factory-Games\CaptainOfIndustry\test\Application\ErpForFactoryGames.CaptainOfIndustry.Application.Tests\ErpForFactoryGames.CaptainOfIndustry.Application.Tests.csproj]
+20:01:41.212 | D | Compile              | C:\Program Files\dotnet\sdk\11.0.100-preview.6.26359.118\Sdks\Microsoft.NET.Sdk\targets\Microsoft.NET.RuntimeIdentifierInference.targets(385,5): message NETSDK1057: You are using a preview version of .NET. See: https://aka.ms/dotnet-support-policy [D:\Github\Erp-For-Factory-Games\CaptainOfIndustry\test\Infrastructure\ErpForFactoryGames.CaptainOfIndustry.Infrastructure.Tests\ErpForFactoryGames.CaptainOfIndustry.Infrastructure.Tests.csproj]
+20:01:41.254 | D | Compile              | C:\Program Files\dotnet\sdk\11.0.100-preview.6.26359.118\Sdks\Microsoft.NET.Sdk\targets\Microsoft.NET.RuntimeIdentifierInference.targets(385,5): message NETSDK1057: You are using a preview version of .NET. See: https://aka.ms/dotnet-support-policy [D:\Github\Erp-For-Factory-Games\CaptainOfIndustry\src\Presentation\ErpForFactoryGames.CaptainOfIndustry.Presentation.Cli\ErpForFactoryGames.CaptainOfIndustry.Presentation.Cli.csproj]
+20:01:41.338 | D | Compile              | C:\Program Files\dotnet\sdk\11.0.100-preview.6.26359.118\Sdks\Microsoft.NET.Sdk\targets\Microsoft.NET.RuntimeIdentifierInference.targets(385,5): message NETSDK1057: You are using a preview version of .NET. See: https://aka.ms/dotnet-support-policy [D:\Github\Erp-For-Factory-Games\CaptainOfIndustry\src\Infrastructure\ErpForFactoryGames.CaptainOfIndustry.Infrastructure\ErpForFactoryGames.CaptainOfIndustry.Infrastructure.csproj]
+20:01:41.342 | D | Compile              | C:\Program Files\dotnet\sdk\11.0.100-preview.6.26359.118\Sdks\Microsoft.NET.Sdk\targets\Microsoft.NET.RuntimeIdentifierInference.targets(385,5): message NETSDK1057: You are using a preview version of .NET. See: https://aka.ms/dotnet-support-policy [D:\Github\Erp-For-Factory-Games\CaptainOfIndustry\test\Domain\ErpForFactoryGames.CaptainOfIndustry.Domain.Tests\ErpForFactoryGames.CaptainOfIndustry.Domain.Tests.csproj]
+20:01:41.355 | D | Compile              | C:\Program Files\dotnet\sdk\11.0.100-preview.6.26359.118\Sdks\Microsoft.NET.Sdk\targets\Microsoft.NET.RuntimeIdentifierInference.targets(385,5): message NETSDK1057: You are using a preview version of .NET. See: https://aka.ms/dotnet-support-policy [D:\Github\Erp-For-Factory-Games\CaptainOfIndustry\src\Domain\ErpForFactoryGames.CaptainOfIndustry.Domain\ErpForFactoryGames.CaptainOfIndustry.Domain.csproj]
+20:01:41.899 | D | Compile              | C:\Program Files\dotnet\sdk\11.0.100-preview.6.26359.118\Sdks\Microsoft.NET.Sdk\targets\Microsoft.NET.RuntimeIdentifierInference.targets(385,5): message NETSDK1057: You are using a preview version of .NET. See: https://aka.ms/dotnet-support-policy [D:\Github\Erp-For-Factory-Games\CaptainOfIndustry\src\Application\ErpForFactoryGames.CaptainOfIndustry.Application\ErpForFactoryGames.CaptainOfIndustry.Application.csproj]
+20:01:42.875 | D | Compile              |   ErpForFactoryGames.CaptainOfIndustry.Domain -> D:\Github\Erp-For-Factory-Games\CaptainOfIndustry\src\Domain\ErpForFactoryGames.CaptainOfIndustry.Domain\bin\Release\net10.0\ErpForFactoryGames.CaptainOfIndustry.Domain.dll
+20:01:44.264 | D | Compile              |   ErpForFactoryGames.CaptainOfIndustry.Domain.Tests -> D:\Github\Erp-For-Factory-Games\CaptainOfIndustry\test\Domain\ErpForFactoryGames.CaptainOfIndustry.Domain.Tests\bin\Release\net10.0\ErpForFactoryGames.CaptainOfIndustry.Domain.Tests.dll
+20:01:45.351 | D | Compile              |   ErpForFactoryGames.CaptainOfIndustry.Application -> D:\Github\Erp-For-Factory-Games\CaptainOfIndustry\src\Application\ErpForFactoryGames.CaptainOfIndustry.Application\bin\Release\net10.0\ErpForFactoryGames.CaptainOfIndustry.Application.dll
+20:01:46.129 | D | Compile              |   ErpForFactoryGames.CaptainOfIndustry.Application.Tests -> D:\Github\Erp-For-Factory-Games\CaptainOfIndustry\test\Application\ErpForFactoryGames.CaptainOfIndustry.Application.Tests\bin\Release\net10.0\ErpForFactoryGames.CaptainOfIndustry.Application.Tests.dll
+20:01:46.737 | D | Compile              |   ErpForFactoryGames.CaptainOfIndustry.Infrastructure -> D:\Github\Erp-For-Factory-Games\CaptainOfIndustry\src\Infrastructure\ErpForFactoryGames.CaptainOfIndustry.Infrastructure\bin\Release\net10.0\ErpForFactoryGames.CaptainOfIndustry.Infrastructure.dll
+20:01:47.858 | D | Compile              |   ErpForFactoryGames.CaptainOfIndustry.Infrastructure.Tests -> D:\Github\Erp-For-Factory-Games\CaptainOfIndustry\test\Infrastructure\ErpForFactoryGames.CaptainOfIndustry.Infrastructure.Tests\bin\Release\net10.0\ErpForFactoryGames.CaptainOfIndustry.Infrastructure.Tests.dll
+20:01:48.361 | D | Compile              |   ErpForFactoryGames.CaptainOfIndustry.Presentation.Cli -> D:\Github\Erp-For-Factory-Games\CaptainOfIndustry\src\Presentation\ErpForFactoryGames.CaptainOfIndustry.Presentation.Cli\bin\Release\net10.0\ErpForFactoryGames.CaptainOfIndustry.Presentation.Cli.dll
+20:01:48.450 | D | Compile              | 
+20:01:48.452 | D | Compile              | Build succeeded.
+20:01:48.452 | D | Compile              |     0 Warning(s)
+20:01:48.453 | D | Compile              |     0 Error(s)
+20:01:48.453 | D | Compile              | 
+20:01:48.453 | D | Compile              | Time Elapsed 00:00:08.98
+20:01:48.586 | V | Compile              | EventInvoker.OnTargetSucceeded (-3.4028235E+38)
+20:01:48.592 | V | Test                 | EventInvoker.OnTargetRunning (-3.4028235E+38)
+20:01:49.307 | I | Test                 | > "C:\Program Files\dotnet\dotnet.exe" test D:\Github\Erp-For-Factory-Games\CaptainOfIndustry\CaptainOfIndustry.slnx --configuration Release --no-build --no-restore
+20:01:49.307 | V | Test                 | @ D:\Github\Erp-For-Factory-Games\CaptainOfIndustry
+20:01:54.318 | D | Test                 | Test run for D:\Github\Erp-For-Factory-Games\CaptainOfIndustry\test\Application\ErpForFactoryGames.CaptainOfIndustry.Application.Tests\bin\Release\net10.0\ErpForFactoryGames.CaptainOfIndustry.Application.Tests.dll (.NETCoreApp,Version=v10.0)
+20:01:54.705 | D | Test                 | Test run for D:\Github\Erp-For-Factory-Games\CaptainOfIndustry\test\Infrastructure\ErpForFactoryGames.CaptainOfIndustry.Infrastructure.Tests\bin\Release\net10.0\ErpForFactoryGames.CaptainOfIndustry.Infrastructure.Tests.dll (.NETCoreApp,Version=v10.0)
+20:01:54.857 | D | Test                 | Test run for D:\Github\Erp-For-Factory-Games\CaptainOfIndustry\test\Domain\ErpForFactoryGames.CaptainOfIndustry.Domain.Tests\bin\Release\net10.0\ErpForFactoryGames.CaptainOfIndustry.Domain.Tests.dll (.NETCoreApp,Version=v10.0)
+20:01:55.847 | D | Test                 | A total of 1 test files matched the specified pattern.
+20:01:56.210 | D | Test                 | A total of 1 test files matched the specified pattern.
+20:01:56.495 | D | Test                 | A total of 1 test files matched the specified pattern.
+20:01:59.762 | D | Test                 | 
+20:01:59.795 | D | Test                 | Passed!  - Failed:     0, Passed:    10, Skipped:     0, Total:    10, Duration: 221 ms - ErpForFactoryGames.CaptainOfIndustry.Application.Tests.dll (net10.0)
+20:02:00.492 | D | Test                 | 
+20:02:00.514 | D | Test                 | Passed!  - Failed:     0, Passed:    10, Skipped:     0, Total:    10, Duration: 281 ms - ErpForFactoryGames.CaptainOfIndustry.Domain.Tests.dll (net10.0)
+20:02:03.178 | D | Test                 | 
+20:02:03.191 | D | Test                 | Passed!  - Failed:     0, Passed:    12, Skipped:     0, Total:    12, Duration: 3 s - ErpForFactoryGames.CaptainOfIndustry.Infrastructure.Tests.dll (net10.0)
+20:02:03.429 | V | Test                 | EventInvoker.OnTargetSucceeded (-3.4028235E+38)
+20:02:03.451 | V |                      | UpdateNotification.OnBuildFinished (10)
+20:02:03.452 | V |                      | SerializeBuildServerState.OnBuildFinished (0)
+20:02:03.453 | V |                      | EventInvoker.OnBuildFinished (-3.4028235E+38)
