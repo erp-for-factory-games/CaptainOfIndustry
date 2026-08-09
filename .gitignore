@@ -10,3 +10,6 @@ artifacts/
 # Never commit extracted catalogues or game assemblies.
 coi-catalogue*.json
 *.dll
+
+# Fallout writes per-run logs here.
+.fallout/temp/
