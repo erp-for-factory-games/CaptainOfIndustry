@@ -1,0 +1,12 @@
+bin/
+obj/
+artifacts/
+*.user
+*.suo
+.vs/
+.idea/
+.vscode/
+
+# Never commit extracted catalogues or game assemblies.
+coi-catalogue*.json
+*.dll
