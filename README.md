@@ -106,8 +106,16 @@ than a side effect.
 
 nuget.org authentication is **trusted publishing** (OIDC): CI exchanges a GitHub
 identity token for a short-lived key, so there is no long-lived API secret in the
-repository. Set the `NUGET_USER` repository variable to the nuget.org account or
-organisation that owns the policy.
+repository.
+
+The publish job runs in the **`Production`** environment, which is what the
+nuget.org trusted-publishing policy is bound to — renaming the environment, the
+workflow file, or the repository breaks the trust relationship and the push will
+be rejected. The `NUGET_USER` repository variable holds the owning nuget.org
+organisation.
+
+Package ids are **not yet prefix-reserved** on nuget.org — see
+[ErpForFactoryGames#320](https://github.com/erp-for-factory-games/ErpForFactoryGames/issues/320).
 
 ## Scope
 
