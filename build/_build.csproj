@@ -20,10 +20,14 @@
   <ItemGroup>
     <!--
       Fallout is the hard-fork successor to NUKE; published to nuget.org
-      (ADR-0021). Pinned exactly: a bare "10.4.0" is a NuGet *minimum*, so an
-      unpinned build system drifts a major version without saying anything.
+      (ADR-0021). Pinned exactly: a bare version in NuGet is a *minimum*, so an
+      unpinned build system drifts a major release without saying anything.
+
+      11.0.8 matches the rest of the group. Not 10.4.0, which hangs the Test
+      target waiting on a test process that does not exit, and not 11.0.18,
+      which moved Fallout.Common.ProjectModel and breaks Build.cs.
     -->
-    <PackageReference Include="Fallout.Common" Version="[10.4.0]" />
+    <PackageReference Include="Fallout.Common" Version="[11.0.8]" />
   </ItemGroup>
 
 </Project>
