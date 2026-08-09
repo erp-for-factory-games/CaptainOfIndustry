@@ -1,6 +1,7 @@
 using Fallout.Common;
 using Fallout.Common.IO;
 using Fallout.Common.ProjectModel;
+using Fallout.Common.Tooling;
 using Fallout.Common.Tools.DotNet;
 
 /// <summary>
@@ -62,11 +63,20 @@ class Build : FalloutBuild
         {
             // The tests that need Captain of Industry installed skip themselves
             // when it isn't — so this is the same command locally and on CI.
+            // The two node-reuse variables are not cosmetic. Fallout waits for
+            // the child's output streams to reach EOF, and MSBuild's reusable
+            // worker nodes and build server outlive `dotnet test` while still
+            // holding the inherited stdout handle — so EOF never arrives and the
+            // build is killed with exit 143 long after every test has passed.
+            // This bit the main ERP repo on 10.4.0; disabling the daemons lets
+            // the pipes close.
             DotNetTasks.DotNetTest(s => s
                 .SetProjectFile(Solution)
                 .SetConfiguration(Configuration)
                 .EnableNoBuild()
-                .EnableNoRestore());
+                .EnableNoRestore()
+                .SetProcessEnvironmentVariable("MSBUILDDISABLENODEREUSE", "1")
+                .SetProcessEnvironmentVariable("DOTNET_CLI_USE_MSBUILD_SERVER", "0"));
         });
 
     Target Pack => _ => _
