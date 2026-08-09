@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>ErpForFactoryGames.CaptainOfIndustry.Application</RootNamespace>
+    <AssemblyName>ErpForFactoryGames.CaptainOfIndustry.Application</AssemblyName>
+    <PackageId>ErpForFactoryGames.CaptainOfIndustry.Application</PackageId>
+    <Description>
+      Ports and use cases for Captain of Industry catalogue extraction. Depends
+      only on the domain — implementations live in Infrastructure.
+    </Description>
+    <PackageTags>captain-of-industry;factory-game;application</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../Domain/ErpForFactoryGames.CaptainOfIndustry.Domain/ErpForFactoryGames.CaptainOfIndustry.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

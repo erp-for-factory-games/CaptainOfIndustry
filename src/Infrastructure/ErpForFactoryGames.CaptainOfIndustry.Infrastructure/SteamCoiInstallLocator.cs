@@ -1,25 +1,23 @@
-namespace ErpForFactoryGames.CaptainOfIndustry.Catalogue;
+using ErpForFactoryGames.CaptainOfIndustry.Application;
+
+namespace ErpForFactoryGames.CaptainOfIndustry.Infrastructure;
 
 /// <summary>
-/// Finds a local Captain of Industry installation, and the <c>Managed</c>
-/// directory holding the assemblies the catalogue is read from.
+/// Finds a Captain of Industry installation: an explicit path, then the
+/// environment variable, then the usual Steam locations.
 /// </summary>
-public static class CoiInstallLocator
+public sealed class SteamCoiInstallLocator : ICoiInstallLocator
 {
     public const string InstallPathEnvironmentVariable = "ERP_CAPTAIN_OF_INDUSTRY_INSTALL_PATH";
 
     private const string DataDirectoryName = "Captain of Industry_Data";
     private const string SteamRelativePath = @"steamapps\common\Captain of Industry";
 
-    /// <summary>The assemblies that must be present for a directory to be usable.</summary>
+    /// <summary>Assemblies that must be present for a directory to be usable.</summary>
     public static readonly IReadOnlyList<string> RequiredAssemblies =
         ["Mafi.dll", "Mafi.Core.dll", "Mafi.Base.dll"];
 
-    /// <summary>
-    /// Resolution order: an explicit path, then the environment variable, then
-    /// the default Steam locations.
-    /// </summary>
-    public static string? ResolveInstallDirectory(string? configuredPath = null)
+    public string? Resolve(string? configuredPath = null)
     {
         if (!string.IsNullOrWhiteSpace(configuredPath))
         {
@@ -35,8 +33,7 @@ public static class CoiInstallLocator
         return DefaultInstallDirectories().FirstOrDefault(IsInstallDirectory);
     }
 
-    /// <summary>True if the directory looks like a game install with the assemblies present.</summary>
-    public static bool IsInstallDirectory(string? path)
+    public bool IsInstallDirectory(string? path)
     {
         var managed = ManagedDirectory(path);
         return managed is not null
@@ -44,16 +41,16 @@ public static class CoiInstallLocator
     }
 
     /// <summary>
-    /// The <c>Managed</c> directory for an install root, or null if the layout
-    /// doesn't match. Also accepts being handed the <c>Managed</c> path itself,
-    /// since that's an easy mistake to make from the command line.
+    /// The <c>Managed</c> directory for an install root, or null when the layout
+    /// doesn't match. Also accepts the <c>Managed</c> path itself — an easy thing
+    /// to pass by mistake from a command line.
     /// </summary>
     public static string? ManagedDirectory(string? installDirectory)
     {
         if (string.IsNullOrWhiteSpace(installDirectory)) return null;
 
-        var direct = Path.Combine(installDirectory, DataDirectoryName, "Managed");
-        if (Directory.Exists(direct)) return direct;
+        var nested = Path.Combine(installDirectory, DataDirectoryName, "Managed");
+        if (Directory.Exists(nested)) return nested;
 
         return Directory.Exists(installDirectory)
                && Path.GetFileName(installDirectory.TrimEnd(Path.DirectorySeparatorChar))
@@ -62,7 +59,7 @@ public static class CoiInstallLocator
             : null;
     }
 
-    /// <summary>Steam's default install locations across the usual drive letters.</summary>
+    /// <summary>Steam's default locations, primary library first.</summary>
     public static IEnumerable<string> DefaultInstallDirectories()
     {
         if (!OperatingSystem.IsWindows()) yield break;

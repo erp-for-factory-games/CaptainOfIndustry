@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>ErpForFactoryGames.CaptainOfIndustry.Infrastructure</RootNamespace>
+    <AssemblyName>ErpForFactoryGames.CaptainOfIndustry.Infrastructure</AssemblyName>
+    <PackageId>ErpForFactoryGames.CaptainOfIndustry.Infrastructure</PackageId>
+    <Description>
+      Adapters for Captain of Industry: reads the catalogue from an installed
+      copy of the game by loading its Mafi assemblies, and persists it as JSON.
+    </Description>
+    <PackageTags>captain-of-industry;factory-game;infrastructure;modding</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../Application/ErpForFactoryGames.CaptainOfIndustry.Application/ErpForFactoryGames.CaptainOfIndustry.Application.csproj" />
+    <ProjectReference Include="../../Domain/ErpForFactoryGames.CaptainOfIndustry.Domain/ErpForFactoryGames.CaptainOfIndustry.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="ErpForFactoryGames.CaptainOfIndustry.Infrastructure.Tests" />
+  </ItemGroup>
+
+</Project>

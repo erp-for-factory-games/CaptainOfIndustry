@@ -1,11 +1,23 @@
 <Solution>
-  <Folder Name="/src/">
-    <Project Path="src/ErpForFactoryGames.CaptainOfIndustry.Catalogue/ErpForFactoryGames.CaptainOfIndustry.Catalogue.csproj" />
+  <Folder Name="/src/Domain/">
+    <Project Path="src/Domain/ErpForFactoryGames.CaptainOfIndustry.Domain/ErpForFactoryGames.CaptainOfIndustry.Domain.csproj" />
   </Folder>
-  <Folder Name="/tests/">
-    <Project Path="tests/ErpForFactoryGames.CaptainOfIndustry.Catalogue.Tests/ErpForFactoryGames.CaptainOfIndustry.Catalogue.Tests.csproj" />
+  <Folder Name="/src/Application/">
+    <Project Path="src/Application/ErpForFactoryGames.CaptainOfIndustry.Application/ErpForFactoryGames.CaptainOfIndustry.Application.csproj" />
   </Folder>
-  <Folder Name="/tools/">
-    <Project Path="tools/CatalogueDump/CatalogueDump.csproj" />
+  <Folder Name="/src/Infrastructure/">
+    <Project Path="src/Infrastructure/ErpForFactoryGames.CaptainOfIndustry.Infrastructure/ErpForFactoryGames.CaptainOfIndustry.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/src/Presentation/">
+    <Project Path="src/Presentation/ErpForFactoryGames.CaptainOfIndustry.Presentation.Cli/ErpForFactoryGames.CaptainOfIndustry.Presentation.Cli.csproj" />
+  </Folder>
+  <Folder Name="/test/Domain/">
+    <Project Path="test/Domain/ErpForFactoryGames.CaptainOfIndustry.Domain.Tests/ErpForFactoryGames.CaptainOfIndustry.Domain.Tests.csproj" />
+  </Folder>
+  <Folder Name="/test/Application/">
+    <Project Path="test/Application/ErpForFactoryGames.CaptainOfIndustry.Application.Tests/ErpForFactoryGames.CaptainOfIndustry.Application.Tests.csproj" />
+  </Folder>
+  <Folder Name="/test/Infrastructure/">
+    <Project Path="test/Infrastructure/ErpForFactoryGames.CaptainOfIndustry.Infrastructure.Tests/ErpForFactoryGames.CaptainOfIndustry.Infrastructure.Tests.csproj" />
   </Folder>
 </Solution>

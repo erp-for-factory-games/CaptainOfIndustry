@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>ErpForFactoryGames.CaptainOfIndustry.Presentation.Cli</RootNamespace>
+    <AssemblyName>ErpForFactoryGames.CaptainOfIndustry.Presentation.Cli</AssemblyName>
+  </PropertyGroup>
+
+  <!--
+    Shipped as a global tool alongside the libraries. The game agent invokes it
+    to set a player up; a human can run the same command to see what it found.
+  -->
+  <PropertyGroup>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>erp-coi</ToolCommandName>
+    <PackageId>ErpForFactoryGames.CaptainOfIndustry.Cli</PackageId>
+    <Description>
+      Command-line tool for Captain of Industry: extracts the product, recipe and
+      building catalogue from an installed copy of the game.
+    </Description>
+    <PackageTags>captain-of-industry;factory-game;cli;dotnet-tool</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Spectre.Console" Version="0.51.1" />
+    <PackageReference Include="Spectre.Console.Cli" Version="0.51.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../Application/ErpForFactoryGames.CaptainOfIndustry.Application/ErpForFactoryGames.CaptainOfIndustry.Application.csproj" />
+    <ProjectReference Include="../../Domain/ErpForFactoryGames.CaptainOfIndustry.Domain/ErpForFactoryGames.CaptainOfIndustry.Domain.csproj" />
+    <ProjectReference Include="../../Infrastructure/ErpForFactoryGames.CaptainOfIndustry.Infrastructure/ErpForFactoryGames.CaptainOfIndustry.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

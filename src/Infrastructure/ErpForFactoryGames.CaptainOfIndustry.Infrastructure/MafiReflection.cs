@@ -1,7 +1,8 @@
 using System.Collections;
 using System.Reflection;
+using ErpForFactoryGames.CaptainOfIndustry.Application;
 
-namespace ErpForFactoryGames.CaptainOfIndustry.Catalogue;
+namespace ErpForFactoryGames.CaptainOfIndustry.Infrastructure;
 
 /// <summary>
 /// Reflection helpers for Mafi's object model. Kept apart from the reader
@@ -11,8 +12,8 @@ internal static class MafiReflection
 {
     /// <summary>
     /// Walks the type hierarchy explicitly. The prototype classes shadow members
-    /// with <c>new</c>, so a plain <c>GetProperty</c> can bind to the wrong one
-    /// or throw for ambiguity.
+    /// with <c>new</c>, so a plain <c>GetProperty</c> can bind the wrong one or
+    /// throw for ambiguity.
     /// </summary>
     public static object? ReadMember(object? obj, string name)
     {
@@ -45,9 +46,33 @@ internal static class MafiReflection
     };
 
     /// <summary>
+    /// Reads a <c>Mafi.Localization.LocStr</c> member as text.
+    /// </summary>
+    /// <remarks>
+    /// <c>LocStr</c> is a struct of <c>Id</c> plus <c>TranslatedString</c>, and its
+    /// <c>ToString()</c> does not yield either — calling <c>ReadString</c> on one
+    /// silently produces an empty name, which is exactly what the original
+    /// extractor did for every product, recipe and building it emitted.
+    /// Falls back to the localisation id, which is still far more use than "".
+    /// </remarks>
+    public static string ReadLocalisedString(object? obj, string name)
+    {
+        var locStr = ReadMember(obj, name);
+        if (locStr is null) return "";
+
+        if (ReadMember(locStr, "TranslatedString") is string translated
+            && !string.IsNullOrWhiteSpace(translated))
+        {
+            return translated;
+        }
+
+        return ReadMember(locStr, "Id") as string ?? "";
+    }
+
+    /// <summary>
     /// Mafi's <c>ImmutableArray&lt;T&gt;</c> is its own type and does not
-    /// implement BCL <see cref="IEnumerable"/>. Its <c>ToArray()</c> does hand
-    /// back a regular array, which is the way in.
+    /// implement BCL <see cref="IEnumerable"/>. Its <c>ToArray()</c> does return
+    /// a regular array, which is the way in.
     /// </summary>
     public static IEnumerable<object?> EnumerateMafiArray(object? mafiArray)
     {
@@ -59,7 +84,7 @@ internal static class MafiReflection
         foreach (var item in array) yield return item;
     }
 
-    /// <summary>BCL enumerable if it is one, otherwise Mafi's array protocol.</summary>
+    /// <summary>BCL enumerable when it is one, otherwise Mafi's array protocol.</summary>
     public static IEnumerable<object?> EnumerateAny(object? collection)
     {
         switch (collection)

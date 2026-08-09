@@ -1,60 +1,40 @@
 using System.Reflection;
 using System.Runtime.Loader;
-using static ErpForFactoryGames.CaptainOfIndustry.Catalogue.MafiReflection;
+using ErpForFactoryGames.CaptainOfIndustry.Application;
+using ErpForFactoryGames.CaptainOfIndustry.Domain;
+using static ErpForFactoryGames.CaptainOfIndustry.Infrastructure.MafiReflection;
 
-namespace ErpForFactoryGames.CaptainOfIndustry.Catalogue;
-
-/// <summary>Raised when the catalogue cannot be read at all.</summary>
-public sealed class CoiCatalogueException(string message, Exception? inner = null)
-    : Exception(message, inner);
+namespace ErpForFactoryGames.CaptainOfIndustry.Infrastructure;
 
 /// <summary>
-/// Reads the product, recipe and building catalogue from a Captain of Industry
-/// installation.
+/// Reads the catalogue out of an installed copy of Captain of Industry.
 /// </summary>
 /// <remarks>
 /// <para>
-/// Captain of Industry keeps its data in code rather than in a readable manifest,
-/// so there is nothing to parse off disk. This loads the shipped
-/// <c>Mafi.dll</c> / <c>Mafi.Core.dll</c> / <c>Mafi.Base.dll</c> into an isolated
-/// <see cref="AssemblyLoadContext"/>, runs the base mod's
-/// <c>RegisterPrototypes</c> **outside Unity**, then walks the populated
+/// The game defines its data in code, not in a readable manifest, so there is
+/// nothing to parse off disk. This loads <c>Mafi.dll</c> / <c>Mafi.Core.dll</c> /
+/// <c>Mafi.Base.dll</c> into an isolated <see cref="AssemblyLoadContext"/>,
+/// stands up just enough of the mod-loading machinery to call
+/// <c>BaseMod.RegisterPrototypes</c> **outside Unity**, then walks the populated
 /// prototype database.
 /// </para>
 /// <para>
-/// Consequences worth knowing: this executes game code in-process, it needs a
-/// local installation, and it must be re-run after each patch. Callers that want
-/// a portable catalogue should read once and persist via
-/// <see cref="CoiCatalogueJson"/>.
+/// This therefore executes game code in-process and needs a local installation.
+/// That is precisely why it sits behind <see cref="ICoiCatalogueSource"/> and why
+/// <see cref="JsonCoiCatalogueStore"/> exists — nothing downstream should inherit
+/// those constraints.
 /// </para>
 /// </remarks>
-public static class CoiCatalogueReader
+public sealed class MafiCatalogueSource : ICoiCatalogueSource
 {
-    /// <summary>Reads the catalogue from a resolved installation.</summary>
-    /// <param name="installDirectory">
-    /// Game root, or the <c>Managed</c> directory itself. When null, the install
-    /// is located via <see cref="CoiInstallLocator.ResolveInstallDirectory"/>.
-    /// </param>
-    /// <param name="log">Optional progress sink for diagnostics.</param>
-    public static CoiCatalogue Load(string? installDirectory = null, Action<string>? log = null)
+    public CoiCatalogue Read(string installDirectory, Action<string>? log = null)
     {
-        var resolved = installDirectory is null
-            ? CoiInstallLocator.ResolveInstallDirectory()
-            : installDirectory;
-
-        if (resolved is null)
-        {
-            throw new CoiCatalogueException(
-                "No Captain of Industry installation found. Pass the install directory explicitly, "
-                + $"or set {CoiInstallLocator.InstallPathEnvironmentVariable}.");
-        }
-
-        var managed = CoiInstallLocator.ManagedDirectory(resolved)
+        var managed = SteamCoiInstallLocator.ManagedDirectory(installDirectory)
                       ?? throw new CoiCatalogueException(
-                          $"'{resolved}' does not look like a Captain of Industry install — "
-                          + "expected a 'Captain of Industry_Data\\Managed' directory beneath it.");
+                          $"'{installDirectory}' does not look like a Captain of Industry install — "
+                          + @"expected a 'Captain of Industry_Data\Managed' directory beneath it.");
 
-        var missing = CoiInstallLocator.RequiredAssemblies
+        var missing = SteamCoiInstallLocator.RequiredAssemblies
             .Where(dll => !File.Exists(Path.Combine(managed, dll)))
             .ToList();
 
@@ -69,7 +49,7 @@ public static class CoiCatalogueReader
 
     /// <summary>
     /// One pass over the prototype database. Instance state is the loaded
-    /// assemblies, so this is deliberately not reusable across installs.
+    /// assemblies, so this is deliberately not reused across installs.
     /// </summary>
     private sealed class PrototypeWalk(string managedDirectory, Action<string> log)
     {
@@ -103,27 +83,32 @@ public static class CoiCatalogueReader
             log($"Loaded Mafi/Mafi.Core/Mafi.Base — Captain of Industry build {gameVersion}");
 
             var (protosDb, warnings) = RegisterPrototypes();
-            var buildings = ReadBuildings(protosDb, out var recipeToBuilding);
+            var buildings = ReadBuildings(protosDb, out var bindings);
 
             return new CoiCatalogue
             {
-                ExtractorVersion = typeof(CoiCatalogueReader).Assembly.GetName().Version?.ToString() ?? "0.0.0",
                 GameVersion = gameVersion,
-                ExtractedAt = DateTimeOffset.UtcNow,
+                ReadAt = DateTimeOffset.UtcNow,
                 Products = ReadProducts(protosDb),
-                Recipes = ReadRecipes(protosDb, recipeToBuilding),
+                Recipes = ReadRecipes(protosDb, bindings),
                 Buildings = buildings,
                 Warnings = warnings,
             };
         }
+
+        /// <summary>
+        /// How a machine runs a recipe. Duration belongs to this pairing rather
+        /// than to the recipe — <c>RecipeProto</c> has no duration of its own.
+        /// </summary>
+        private readonly record struct RecipeBinding(string BuildingId, int DurationTicks);
 
         private Type GameType(string name) =>
             _mafi.GetType(name) ?? _core.GetType(name) ?? _base.GetType(name)
             ?? throw new CoiCatalogueException($"Type not found in the game assemblies: {name}");
 
         /// <summary>
-        /// Stands up just enough of the mod-loading machinery to invoke
-        /// <c>BaseMod.RegisterPrototypes</c> without Unity present.
+        /// Stands up enough of the mod-loading machinery to invoke
+        /// <c>BaseMod.RegisterPrototypes</c> with no Unity present.
         /// </summary>
         private (object ProtosDb, List<string> Warnings) RegisterPrototypes()
         {
@@ -157,9 +142,9 @@ public static class CoiCatalogueReader
             }
             catch (TargetInvocationException ex)
             {
-                // Registration can stop partway on the Unity-dependent tail while
-                // still having populated most of the database. A partial catalogue
-                // beats no catalogue, so record and continue.
+                // The tail of registration reaches for Unity and throws. By then
+                // the product, recipe and machine prototypes are all registered,
+                // so a recorded warning beats abandoning a usable catalogue.
                 var inner = ex.InnerException ?? ex;
                 var message = $"Registration stopped midway: {inner.GetType().Name}: {inner.Message}";
                 warnings.Add(message);
@@ -225,7 +210,7 @@ public static class CoiCatalogueReader
                     var element = type.GetGenericArguments()[0];
                     var array = EmptyMafiArray(element);
 
-                    // The registrator wants the mod list to contain BaseMod itself.
+                    // The registrator expects the mod list to contain BaseMod.
                     if (element.IsAssignableFrom(baseModType))
                     {
                         var add = array.GetType().GetMethod("Add", [element])!;
@@ -277,7 +262,7 @@ public static class CoiCatalogueReader
                 return new CoiProduct
                 {
                     Id = ReadString(product, "Id") ?? "",
-                    Name = ReadString(ReadMember(product, "Strings"), "Name") ?? "",
+                    Name = ReadLocalisedString(ReadMember(product, "Strings"), "Name"),
                     Kind = type.Name.EndsWith("ProductProto", StringComparison.Ordinal)
                         ? type.Name[..^"ProductProto".Length]
                         : type.Name,
@@ -291,25 +276,28 @@ public static class CoiCatalogueReader
             return products;
         }
 
-        private List<CoiRecipe> ReadRecipes(object protosDb, Dictionary<string, string> recipeToBuilding)
+        private List<CoiRecipe> ReadRecipes(object protosDb, Dictionary<string, RecipeBinding> bindings)
         {
             var recipeType = GameType("Mafi.Core.Factory.Recipes.RecipeProto");
 
             var recipes = EnumerateProtos(protosDb, recipeType).Select(recipe =>
             {
                 var id = ReadString(recipe, "Id") ?? "";
+                var binding = bindings.GetValueOrDefault(id);
+
                 return new CoiRecipe
                 {
                     Id = id,
-                    Name = ReadString(ReadMember(recipe, "Strings"), "Name") ?? "",
-                    Building = recipeToBuilding.GetValueOrDefault(id),
-                    DurationTicks = ReadInt(ReadMember(recipe, "Duration"), "Ticks"),
+                    Name = ReadLocalisedString(ReadMember(recipe, "Strings"), "Name"),
+                    BuildingId = binding.BuildingId,
+                    DurationTicks = binding.DurationTicks,
                     Inputs = ReadRecipeProducts(recipe, "AllInputs"),
                     Outputs = ReadRecipeProducts(recipe, "AllOutputs"),
                 };
             }).OrderBy(r => r.Id, StringComparer.Ordinal).ToList();
 
-            log($"  recipes:   {recipes.Count}");
+            var timed = recipes.Count(r => r.DurationTicks > 0);
+            log($"  recipes:   {recipes.Count} ({timed} with a duration)");
             return recipes;
         }
 
@@ -322,28 +310,33 @@ public static class CoiCatalogueReader
                 })
                 .ToList();
 
-        private List<CoiBuilding> ReadBuildings(object protosDb, out Dictionary<string, string> recipeToBuilding)
+        private List<CoiBuilding> ReadBuildings(object protosDb, out Dictionary<string, RecipeBinding> bindings)
         {
             // MachineProto is the useful "building" for planning; the wider
             // StaticEntityProto also covers terrain, vehicles and decoration.
             var machineType = GameType("Mafi.Core.Factory.Machines.MachineProto");
-            var map = new Dictionary<string, string>(StringComparer.Ordinal);
+            var map = new Dictionary<string, RecipeBinding>(StringComparer.Ordinal);
 
             var buildings = EnumerateProtos(protosDb, machineType).Select(building =>
             {
                 var buildingId = ReadString(building, "Id") ?? "";
                 var recipeIds = new List<string>();
 
-                foreach (var recipe in EnumerateAny(ReadMember(building, "Recipes")))
+                // RecipeBindings, not Recipes: the binding is what carries the
+                // duration. Reading the recipe list alone yields recipes with no
+                // cycle time, and therefore no throughput to plan with.
+                foreach (var binding in EnumerateAny(ReadMember(building, "RecipeBindings")))
                 {
-                    var recipeId = ReadString(recipe, "Id");
+                    var recipeId = ReadString(ReadMember(binding, "Recipe"), "Id");
                     if (string.IsNullOrEmpty(recipeId)) continue;
 
                     recipeIds.Add(recipeId);
 
                     // A recipe belongs to exactly one machine in CoI's model —
-                    // tiers are modelled as separate recipes — so first wins.
-                    map.TryAdd(recipeId, buildingId);
+                    // tiers are separate recipes — so first wins.
+                    map.TryAdd(recipeId, new RecipeBinding(
+                        buildingId,
+                        ReadInt(ReadMember(binding, "Duration"), "Ticks")));
                 }
 
                 recipeIds.Sort(StringComparer.Ordinal);
@@ -351,14 +344,14 @@ public static class CoiCatalogueReader
                 return new CoiBuilding
                 {
                     Id = buildingId,
-                    Name = ReadString(ReadMember(building, "Strings"), "Name") ?? "",
+                    Name = ReadLocalisedString(ReadMember(building, "Strings"), "Name"),
                     ElectricityKw = ReadInt(ReadMember(building, "ElectricityConsumed"), "Value"),
-                    Recipes = recipeIds,
+                    RecipeIds = recipeIds,
                 };
             }).OrderBy(b => b.Id, StringComparer.Ordinal).ToList();
 
-            recipeToBuilding = map;
-            log($"  buildings: {buildings.Count} ({map.Count} recipes mapped to a building)");
+            bindings = map;
+            log($"  buildings: {buildings.Count} ({map.Count} recipes bound to a machine)");
             return buildings;
         }
     }

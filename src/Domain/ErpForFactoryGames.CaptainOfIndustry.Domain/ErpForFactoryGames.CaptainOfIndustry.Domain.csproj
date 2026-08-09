@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>ErpForFactoryGames.CaptainOfIndustry.Domain</RootNamespace>
+    <AssemblyName>ErpForFactoryGames.CaptainOfIndustry.Domain</AssemblyName>
+    <PackageId>ErpForFactoryGames.CaptainOfIndustry.Domain</PackageId>
+    <Description>
+      Captain of Industry domain model for ERP for Factory Games — products,
+      recipes, buildings and factory snapshots. Pure C# with no dependencies.
+    </Description>
+    <PackageTags>captain-of-industry;factory-game;domain</PackageTags>
+  </PropertyGroup>
+
+  <!--
+    Domain takes no project or package references, by rule (ADR-0004). If
+    something here needs one, it belongs in a layer further out.
+  -->
+
+</Project>

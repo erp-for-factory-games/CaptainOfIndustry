@@ -1,0 +1,42 @@
+<Project>
+
+  <!--
+    Shared settings for every project in the repository. Layer-specific concerns
+    (package metadata, tool packing) stay in the individual csproj files.
+  -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <!--
+    Published layers carry XML docs. Requiring a <summary> on every positional
+    record member and ToString override is noise rather than rigour, so those two
+    rules are off; everything else still warns.
+  -->
+  <PropertyGroup Condition="!$(MSBuildProjectName.EndsWith('.Tests'))">
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);CS1591;CS1573</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="$(MSBuildProjectName.EndsWith('.Tests'))">
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <!-- Package metadata common to everything this repo publishes. -->
+  <PropertyGroup>
+    <Authors>ERP for Factory Games</Authors>
+    <PackageProjectUrl>https://github.com/erp-for-factory-games/CaptainOfIndustry</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/erp-for-factory-games/CaptainOfIndustry</RepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(IsPackable)' != 'false'">
+    <None Include="$(MSBuildThisFileDirectory)README.md" Pack="true" PackagePath="/" />
+  </ItemGroup>
+
+</Project>
